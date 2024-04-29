@@ -17,7 +17,6 @@ main :: Effect Unit
 main =
   runTest do
     runChapterExamples
-    {-  Move this block comment starting point to enable more tests
     suite "Show Me!" do
       test "Show Point" do
         Assert.equal "(1.0, 2.0)"
@@ -160,6 +159,7 @@ main =
       test "dedupShapesFast" do
         Assert.equal noDups
           $ dedupShapesFast withDups
+    {-  Move this block comment starting point to enable more tests
     suite "Multi Parameter Type Classes " do
       test "unsafeMaximum" do
         Assert.equal 42
