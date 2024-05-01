@@ -3,8 +3,11 @@ module Test.MySolutions where
 import Prelude
 
 import Data.Array (nub, nubEq)
-import Data.Foldable (class Foldable, foldMap, foldl, foldr)
+import Data.Foldable (class Foldable, foldMap, foldl, foldr, maximum)
+import Data.Formatter.Internal (repeat)
 import Data.Generic.Rep (class Generic)
+import Data.Maybe (Maybe(..))
+import Data.Newtype (overF)
 import Data.Show.Generic (genericShow)
 
 -- Point
@@ -110,3 +113,40 @@ instance Foldable f => Foldable (OneMore f) where
   foldl fn z (OneMore a fa) = foldl fn (fn z a) fa
   foldr fn z (OneMore a fa) = fn a (foldr fn z fa)
   foldMap fn (OneMore a fa) = fn a <> foldMap fn fa
+
+
+unsafeMaximum :: Partial => Array Int -> Int
+unsafeMaximum xs =
+  case maximum xs of
+      Nothing -> 100
+      Just x -> x
+
+newtype Multiply = Multiply Int
+
+instance Semigroup Multiply where
+  append (Multiply n) (Multiply m) = Multiply (n * m)
+
+instance Monoid Multiply where
+  mempty = Multiply 1
+
+class Monoid m <= Action m a where
+  act :: m -> a -> a
+
+instance Action Multiply Int where
+  act (Multiply n) m = n * m
+
+instance Action Multiply String where
+  act (Multiply n) s = repeat s n
+
+instance Action m a => Action m (Array a) where
+  act m arr = map (act m) arr
+
+newtype Self m = Self m
+
+instance Monoid m => Action m (Self m) where
+  act m1 (Self m2) = Self (m1 <> m2)
+
+derive newtype instance Show Multiply
+derive newtype instance Eq Multiply
+derive newtype instance Show m => Show (Self m)
+derive newtype instance Eq m => Eq (Self m)

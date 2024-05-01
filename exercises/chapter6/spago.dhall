@@ -17,6 +17,7 @@ You can edit this file as you like.
   , "strings"
   , "test-unit"
   , "tuples"
+  , "formatters"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]
