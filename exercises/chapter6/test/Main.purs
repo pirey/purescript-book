@@ -238,7 +238,6 @@ main =
         test "concrete" do
           Assert.equal (Self (Multiply 12))
             $ act m2 a
-    {-  Move this block comment starting point to enable more tests
     suite "A Type Class for Hashes" do
       suite "arrayHasDuplicates" do
         test "no dupe" do
@@ -261,7 +260,6 @@ main =
             $ hash
             $ Hour 14
 
--}
 runChapterExamples :: TestSuite
 runChapterExamples =
   test "Todo for book maintainers - Add tests for chapter examples" do

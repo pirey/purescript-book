@@ -2,13 +2,13 @@ module Test.MySolutions where
 
 import Prelude
 
-import Data.Array (nub, nubEq)
+import Data.Array (length, nub, nubByEq, nubEq)
 import Data.Foldable (class Foldable, foldMap, foldl, foldr, maximum)
 import Data.Formatter.Internal (repeat)
 import Data.Generic.Rep (class Generic)
 import Data.Maybe (Maybe(..))
-import Data.Newtype (overF)
 import Data.Show.Generic (genericShow)
+import Data.Hashable (class Hashable, hash, hashEqual)
 
 -- Point
 
@@ -150,3 +150,18 @@ derive newtype instance Show Multiply
 derive newtype instance Eq Multiply
 derive newtype instance Show m => Show (Self m)
 derive newtype instance Eq m => Eq (Self m)
+
+arrayHasDuplicates :: forall a. Hashable a => Array a -> Boolean
+arrayHasDuplicates arr =
+  let
+      hashAndValEqual a b = hashEqual a b && a == b
+  in
+    length arr /= (length $ nubByEq hashAndValEqual arr)
+
+newtype Hour = Hour Int
+
+instance Eq Hour where
+  eq (Hour n) (Hour m) = mod n 12 == mod m 12
+
+instance Hashable Hour where
+  hash (Hour h) = hash $ mod h 12
