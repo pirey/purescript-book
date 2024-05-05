@@ -2,7 +2,7 @@ module Test.MySolutions where
 
 import Prelude
 
-import Data.AddressBook (Address, PhoneNumber, address)
+import Data.AddressBook (Address, PhoneNumber, PhoneType(..), address, phoneNumber)
 import Data.AddressBook.Validation (Errors, matches, nonEmpty, validateAddress, validatePhoneNumbers)
 import Data.Generic.Rep (class Generic)
 import Data.Maybe (Maybe(..))
@@ -130,3 +130,15 @@ sequenceUsingTraverse t = traverse identity t
 -- Exercise 7
 traverseUsingSequence :: forall a b m t. Traversable t => Applicative m => (a -> m b) -> t a -> m (t b)
 traverseUsingSequence f t = sequence $ map f t
+
+examplePerson :: PersonOptionalAddress
+examplePerson =
+  { firstName: "John"
+  , lastName: "Smith"
+  -- , homeAddress: Just $ address "123 Fake St." "FakeTown" "CA"
+  , homeAddress: Nothing
+  , phones:
+  [ phoneNumber HomePhone "555-555-5555"
+  , phoneNumber CellPhone "555-555-0000"
+  ]
+}
