@@ -19,7 +19,6 @@ main :: Effect Unit
 main =
   runTest do
     runChapterExamples
-    {-  Move this block comment starting point to enable more tests
     suite "Exercises Group - Monads and Applicatives" do
       suite "third" do
         test "No elements"
@@ -102,7 +101,6 @@ main =
           test "45th Fibonacci number"
             $ Assert.equal 1134903170 (fibonacci 45)
 
--}
 runChapterExamples :: TestSuite
 runChapterExamples =
   -- Testing chapter examples in book - for reader reference only
