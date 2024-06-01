@@ -4,11 +4,11 @@ import Prelude
 import Data.Generic.Rep (class Generic)
 import Data.Show.Generic (genericShow)
 
-type Address
-  = { street :: String
-    , city :: String
-    , state :: String
-    }
+type Address =
+  { street :: String
+  , city :: String
+  , state :: String
+  }
 
 address :: String -> String -> String -> Address
 address street city state = { street, city, state }
@@ -18,6 +18,7 @@ data PhoneType
   | WorkPhone
   | CellPhone
   | OtherPhone
+
 derive instance eqPhoneType :: Eq PhoneType
 
 derive instance Generic PhoneType _
@@ -25,10 +26,10 @@ derive instance Generic PhoneType _
 instance Show PhoneType where
   show = genericShow
 
-type PhoneNumber
-  = { "type" :: PhoneType
-    , number :: String
-    }
+type PhoneNumber =
+  { "type" :: PhoneType
+  , number :: String
+  }
 
 phoneNumber :: PhoneType -> String -> PhoneNumber
 phoneNumber ty number =
@@ -36,12 +37,12 @@ phoneNumber ty number =
   , number: number
   }
 
-type Person
-  = { firstName :: String
-    , lastName :: String
-    , homeAddress :: Address
-    , phones :: Array PhoneNumber
-    }
+type Person =
+  { firstName :: String
+  , lastName :: String
+  , homeAddress :: Address
+  , phones :: Array PhoneNumber
+  }
 
 person :: String -> String -> Address -> Array PhoneNumber -> Person
 person firstName lastName homeAddress phones = { firstName, lastName, homeAddress, phones }

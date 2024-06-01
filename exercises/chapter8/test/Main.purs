@@ -80,21 +80,23 @@ main =
           $ Assert.equal 2
           $ fromRight 0
           $ unsafePerformEffect
-          $ try $ exceptionDivide 6 3
+          $ try
+          $ exceptionDivide 6 3
         test "6 / 0"
           $ Assert.equal "div zero"
           $ message
           $ fromLeft (error "")
           $ unsafePerformEffect
-          $ try $ exceptionDivide 6 0
+          $ try
+          $ exceptionDivide 6 0
       suite "ST" do
         suite "estimatePi" do
           test "1000 terms of Gregory Series"
             $ Assert.assert "Estimated value of pi not within threshold"
-            (abs (estimatePi 1000 - pi) < 0.002)
+                (abs (estimatePi 1000 - pi) < 0.002)
           test "1000000 terms of Gregory Series"
             $ Assert.assert "Estimated value of pi not within threshold"
-            (abs (estimatePi 1000000 - pi) < 0.000002)
+                (abs (estimatePi 1000000 - pi) < 0.000002)
         suite "fibonacci" do
           test "40th Fibonacci number"
             $ Assert.equal 102334155 (fibonacci 40)

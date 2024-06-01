@@ -11,18 +11,18 @@ countThrows :: Int -> Array (Array Int)
 countThrows n = do
   x <- 1 .. 6
   y <- 1 .. 6
-  if x + y == n
-    then pure [ x, y ]
-    else empty
+  if x + y == n then pure [ x, y ]
+  else empty
 
 {-| Folding With Monads -}
-foldM :: forall m a b
-       . Monad m
-      => (a -> b -> m a)
-      -> a
-      -> List b
-      -> m a
-foldM _ a Nil      = pure a
+foldM
+  :: forall m a b
+   . Monad m
+  => (a -> b -> m a)
+  -> a
+  -> List b
+  -> m a
+foldM _ a Nil = pure a
 foldM f a (b : bs) = do
   a' <- f a b
   foldM f a' bs
