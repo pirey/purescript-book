@@ -1,7 +1,8 @@
-module Main where
+module Main
+  ( main
+  ) where
 
 import Prelude
-
 import Data.AddressBook (PhoneNumber, examplePerson)
 import Data.AddressBook.Validation (Errors, Field(..), ValidationError(..), validatePerson')
 import Data.Array (length, mapWithIndex, updateAt)
@@ -25,7 +26,8 @@ import Web.HTML.Window (document)
 
 renderError :: Maybe ValidationError -> R.JSX
 renderError (Nothing) = R.empty
-renderError (Just (ValidationError err _)) = D.div { className: "alert alert-danger", children: [D.text err]}
+
+renderError (Just (ValidationError err _)) = D.div { className: "alert alert-danger", children: [ D.text err ] }
 
 getFieldError :: Errors -> Field -> Maybe ValidationError
 getFieldError errors field = List.find (\(ValidationError _ vfield) -> vfield == field) errors
@@ -55,8 +57,9 @@ formField name placeholder value maybeValidation setValue =
                 ]
             }
         , D.div
-          { className: "col-sm"
-          , children: [renderError maybeValidation]}
+            { className: "col-sm"
+            , children: [ renderError maybeValidation ]
+            }
         ]
     }
 
@@ -70,7 +73,7 @@ mkAddressBookApp =
     Tuple person setPerson <- useState examplePerson
     let
       errors = case validatePerson' person of
-        Left  e -> e
+        Left e -> e
         Right _ -> []
 
       -- helper-function to return array unchanged instead of Nothing if index is out of bounds
@@ -91,40 +94,43 @@ mkAddressBookApp =
       renderPhoneNumbers :: Array R.JSX
       renderPhoneNumbers = mapWithIndex renderPhoneNumber person.phones
 
-      submitButton = D.button { disabled: length errors > 0
-                              , className: "btn btn-primary"
-                              , children: [D.text "Submit"]
-                              }
+      submitButton =
+        D.button
+          { disabled: length errors > 0
+          , className: "btn btn-primary"
+          , children: [ D.text "Submit" ]
+          }
     pure
       $ D.div
           { className: "container"
           , children:
-                [ D.div
-                      { className: "row"
-                      , key: "person-form"
-                      , children:
-                        [ D.form
+              [ D.div
+                  { className: "row"
+                  , key: "person-form"
+                  , children:
+                      [ D.form
                           { className: "w-100"
-                          , children:[ D.h3_ [ D.text "Basic Information" ]
-                                , formField "First Name" "First Name" person.firstName (getFieldError errors FirstNameField) \s ->
+                          , children:
+                              [ D.h3_ [ D.text "Basic Information" ]
+                              , formField "First Name" "First Name" person.firstName (getFieldError errors FirstNameField) \s ->
                                   setPerson _ { firstName = s }
-                                , formField "Last Name" "Last Name" person.lastName (getFieldError errors LastNameField) \s ->
+                              , formField "Last Name" "Last Name" person.lastName (getFieldError errors LastNameField) \s ->
                                   setPerson _ { lastName = s }
-                                  , D.h3_ [ D.text "Address" ]
-                                , formField "Street" "Street" person.homeAddress.street (getFieldError errors StreetField) \s ->
+                              , D.h3_ [ D.text "Address" ]
+                              , formField "Street" "Street" person.homeAddress.street (getFieldError errors StreetField) \s ->
                                   setPerson _ { homeAddress { street = s } }
-                                , formField "City" "City" person.homeAddress.city (getFieldError errors CityField) \s ->
+                              , formField "City" "City" person.homeAddress.city (getFieldError errors CityField) \s ->
                                   setPerson _ { homeAddress { city = s } }
-                                , formField "State" "State" person.homeAddress.state (getFieldError errors StateField) \s ->
+                              , formField "State" "State" person.homeAddress.state (getFieldError errors StateField) \s ->
                                   setPerson _ { homeAddress { state = s } }
-                                  , D.h3_ [ D.text "Contact Information" ]
-                                  ]
+                              , D.h3_ [ D.text "Contact Information" ]
+                              ]
                                 <> renderPhoneNumbers
-                                <> [submitButton]
+                                <> [ submitButton ]
                           }
-                        ]
-                      }
-                  ]
+                      ]
+                  }
+              ]
           }
 
 main :: Effect Unit
