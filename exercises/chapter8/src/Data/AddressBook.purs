@@ -18,6 +18,7 @@ data PhoneType
   | WorkPhone
   | CellPhone
   | OtherPhone
+derive instance eqPhoneType :: Eq PhoneType
 
 derive instance Generic PhoneType _
 
@@ -51,4 +52,5 @@ examplePerson =
     (address "123 Fake St." "FakeTown" "CA")
     [ phoneNumber HomePhone "555-555-5555"
     , phoneNumber CellPhone "555-555-0000"
+    , phoneNumber WorkPhone "555-555-0000"
     ]
