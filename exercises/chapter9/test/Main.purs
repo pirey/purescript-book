@@ -65,7 +65,6 @@ main =
       outFooBarTxt <- readTextFile UTF8 outFooBar
       Assert.equal (inFooTxt <> inBarTxt) outFooBarTxt
 
-{-  Move this block comment starting point to enable more tests
     test "concatenateMany" do
       let
         inFiles = map (\i -> Path.concat [ inDir, "many", "file" <> show i <> ".txt" ]) $ 1 .. 9
@@ -78,6 +77,7 @@ main =
       actualOutTxt <- readTextFile UTF8 outFile
       expectedOutTxt <- readTextFile UTF8 expectedOutFile
       Assert.equal expectedOutTxt actualOutTxt
+
     suite "countCharacters" do
       test "exists" do
         chars <- countCharacters $ Path.concat [ inDir, "nbChars.txt" ]
@@ -86,6 +86,7 @@ main =
         absolutePath <- realpath $ Path.concat [ inDir ]
         chars <- countCharacters $ Path.concat [ absolutePath, "foof.txt" ]
         Assert.equal (Left ("ENOENT: no such file or directory, open '" <> absolutePath <> Path.sep <> "foof.txt'")) $ lmap message chars
+
     test "writeGet" do
       let
         outFile = Path.concat [ outDir, "user.txt" ]
@@ -96,6 +97,7 @@ main =
       actualOutTxt <- readTextFile UTF8 outFile
       expectedOutTxt <- readTextFile UTF8 expectedOutFile
       Assert.equal expectedOutTxt actualOutTxt
+
     test "concatenateManyParallel" do
       let
         inFiles = map (\i -> Path.concat [ inDir, "many", "file" <> show i <> ".txt" ]) $ 1 .. 9
@@ -137,7 +139,6 @@ main =
         actual <- recurseFiles file
         Assert.equal (Set.fromFoldable expected) $ Set.fromFoldable actual
 
--}
 runChapterExamples :: TestSuite
 runChapterExamples = do
   test "copyFile" do
