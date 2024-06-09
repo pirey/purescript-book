@@ -28,7 +28,6 @@ main :: Effect Unit
 main =
   runTest do
     test "" success
-    {-  Move this block comment starting point to enable more tests
     suite "Exercises Group - The State Monad" do
       suite "testParens" do
         let
@@ -36,7 +35,8 @@ main =
           runTestParens expected str =
             test testName do
               Assert.equal expected $ testParens str
-            where testName = "str = \"" <> str <> "\""
+            where
+            testName = "str = \"" <> str <> "\""
         runTestParens true ""
         runTestParens true "(()(())())"
         runTestParens true "(hello)"
@@ -53,34 +53,37 @@ main =
             \    I am even more indented"
         test "should render with indentations" do
           Assert.equal expectedText
-            $ render $ cat
-              [ line "Here is some indented text:"
-              , indent $ cat
-                [ line "I am indented"
-                , line "So am I"
-                , indent $ line "I am even more indented"
+            $ render
+            $ cat
+                [ line "Here is some indented text:"
+                , indent $ cat
+                    [ line "I am indented"
+                    , line "So am I"
+                    , indent $ line "I am even more indented"
+                    ]
                 ]
-              ]
     suite "Exercises Group - The Writer Monad" do
       suite "sumArrayWriter" do
         test "should sum arrays" do
           Assert.equal (Additive 21)
-            $ execWriter $ do
-              sumArrayWriter [1, 2, 3]
-              sumArrayWriter [4, 5]
-              sumArrayWriter [6]
+            $ execWriter
+            $ do
+                sumArrayWriter [ 1, 2, 3 ]
+                sumArrayWriter [ 4, 5 ]
+                sumArrayWriter [ 6 ]
       suite "collatz" do
         let
           expected_11 =
-            Tuple 14 [11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1]
+            Tuple 14 [ 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1 ]
           expected_15 =
-            Tuple 17 [15, 46, 23, 70, 35, 106, 53, 160, 80, 40, 20, 10, 5, 16, 8, 4, 2, 1]
+            Tuple 17 [ 15, 46, 23, 70, 35, 106, 53, 160, 80, 40, 20, 10, 5, 16, 8, 4, 2, 1 ]
         test "c = 11" do
           Assert.equal expected_11
             $ collatz 11
         test "c = 15" do
           Assert.equal expected_15
             $ collatz 15
+{-  Move this block comment starting point to enable more tests
     suite "Exercises Group - Monad Transformers" do
       suite "safeDivide" do
         test "should fail when dividing by zero" do
