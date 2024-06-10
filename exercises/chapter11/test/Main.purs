@@ -83,22 +83,24 @@ main =
         test "c = 15" do
           Assert.equal expected_15
             $ collatz 15
-{-  Move this block comment starting point to enable more tests
     suite "Exercises Group - Monad Transformers" do
       suite "safeDivide" do
         test "should fail when dividing by zero" do
           Assert.equal (Left "Divide by zero!")
-            $ unwrap $ runExceptT $ safeDivide 5 0
+            $ unwrap
+            $ runExceptT
+            $ safeDivide 5 0
         test "should successfully divide for any other input" do
           Assert.equal (Right 2) $ unwrap $ runExceptT $ safeDivide 6 3
+{-  Move this block comment starting point to enable more tests
       suite "parser" do
         let
           runParser p s = unwrap $ runExceptT $ runWriterT $ runStateT p s
         test "should parse a string" do
-          Assert.equal (Right (Tuple (Tuple "abc" "def") ["The state is abcdef"]))
+          Assert.equal (Right (Tuple (Tuple "abc" "def") [ "The state is abcdef" ]))
             $ runParser (string "abc") "abcdef"
         test "should fail if string could not be parsed" do
-          Assert.equal (Left ["Could not parse"])
+          Assert.equal (Left [ "Could not parse" ])
             $ runParser (string "abc") "foobar"
       suite "indents with ReaderT and WriterT" do
         let
@@ -109,7 +111,8 @@ main =
             \    I am even more indented"
         test "should render with indentations" do
           Assert.equal expectedText
-            $ render' $ do
+            $ render'
+            $ do
                 line' "Here is some indented text:"
                 indent' $ do
                   line' "I am indented"

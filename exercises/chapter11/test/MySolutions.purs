@@ -2,14 +2,17 @@ module Test.MySolutions where
 
 import Prelude
 
+import Control.Monad.Except (ExceptT, throwError)
 import Control.Monad.Reader (Reader, ask, local, runReader)
 import Control.Monad.State (State, execState, modify_)
-import Control.Monad.Writer (Writer, tell)
+import Control.Monad.Writer (Writer, runWriter, tell)
+import Data.Identity (Identity)
 import Data.Monoid (power)
 import Data.Monoid.Additive (Additive(..))
 import Data.String (joinWith)
 import Data.String.CodeUnits (toCharArray)
 import Data.Traversable (sequence, traverse_)
+import Data.Tuple (Tuple)
 
 testParens :: String -> Boolean
 testParens str =
@@ -56,3 +59,22 @@ sumArrayWriter = traverse_ \n -> do
   tell $ Additive n
   pure unit
 
+--
+
+collatz :: Int -> Tuple Int (Array Int)
+collatz c = runWriter $ cltz 0 c
+  where
+  cltz :: Int -> Int -> Writer (Array Int) Int
+  cltz i 1 = do
+    tell [ 1 ]
+    pure i
+  cltz i n = do
+    tell [ n ]
+    if n `mod` 2 == 0 then
+      cltz (i + 1) (n / 2)
+    else
+      cltz (i + 1) (3 * n + 1)
+
+safeDivide :: Int -> Int -> ExceptT String Identity Int
+safeDivide _ 0 = throwError "Divide by zero!"
+safeDivide a b = pure $ a / b
