@@ -3,13 +3,15 @@ module Test.MySolutions where
 import Prelude
 
 import Control.Monad.Except (ExceptT, throwError)
-import Control.Monad.Reader (Reader, ask, local, runReader)
-import Control.Monad.State (State, execState, modify_)
-import Control.Monad.Writer (Writer, runWriter, tell)
+import Control.Monad.Reader (Reader, ReaderT, ask, lift, local, runReader, runReaderT)
+import Control.Monad.State (State, StateT, execState, get, modify_, put)
+import Control.Monad.Writer (Writer, WriterT, execWriterT, runWriter, tell)
 import Data.Identity (Identity)
+import Data.Maybe (Maybe(..))
 import Data.Monoid (power)
 import Data.Monoid.Additive (Additive(..))
-import Data.String (joinWith)
+import Data.Newtype (unwrap)
+import Data.String (Pattern(..), joinWith, stripPrefix)
 import Data.String.CodeUnits (toCharArray)
 import Data.Traversable (sequence, traverse_)
 import Data.Tuple (Tuple)
@@ -78,3 +80,52 @@ collatz c = runWriter $ cltz 0 c
 safeDivide :: Int -> Int -> ExceptT String Identity Int
 safeDivide _ 0 = throwError "Divide by zero!"
 safeDivide a b = pure $ a / b
+
+-- Parser
+type Errors = Array String
+type Log = Array String
+type Parser = StateT String (WriterT Log (ExceptT Errors Identity))
+
+string :: String -> Parser String
+string prefix = do
+  st <- get
+  lift $ tell [ "The state is " <> st ]
+  case stripPrefix (Pattern prefix) st of
+    Just rest -> do
+      put rest
+      pure prefix
+    _ -> do
+      lift $ lift $ throwError [ "Could not parse" ]
+
+-- Doc
+type Level' = Int
+type Doc' = (WriterT (Array String) (ReaderT Level' Identity)) Unit
+
+line' :: String -> Doc'
+line' s = do
+  level <- lift $ ask
+  tell [ (power "  " level) <> s ]
+  pure unit
+
+indent' :: Doc' -> Doc'
+indent' = local $ (+) 1
+
+render' :: Doc' -> String
+render' doct = joinWith "\n" $ unwrap $ runReaderT (execWriterT doct) 0
+
+-- asFollowedByBs :: Parser String
+-- asFollowedByBs = do
+--   as <- some $ string "a"
+--   bs <- some $ string "b"
+--   pure $ fold $ as <> bs
+--
+-- asOrBs :: Parser String
+-- asOrBs = fold <$> some (string "a" <|> string "b")
+--
+-- -- Note, that this function should be defined in Game.purs to avoid creating a circular dependency.
+-- cheat :: Game Unit
+-- cheat = do
+--   GameState state <- get
+--   let newInventory = foldl S.union state.inventory state.items
+--   tell $ foldl (\acc x -> ("You now have the " <> show x) : acc) L.Nil $ S.unions state.items
+--   put $ GameState state { items = M.empty, inventory = newInventory }

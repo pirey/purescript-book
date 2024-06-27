@@ -92,7 +92,6 @@ main =
             $ safeDivide 5 0
         test "should successfully divide for any other input" do
           Assert.equal (Right 2) $ unwrap $ runExceptT $ safeDivide 6 3
-{-  Move this block comment starting point to enable more tests
       suite "parser" do
         let
           runParser p s = unwrap $ runExceptT $ runWriterT $ runStateT p s
@@ -120,6 +119,7 @@ main =
                   indent' $ do
                     line' "I am even more indented"
 
+{-  Move this block comment starting point to enable more tests
     suite "Exercises Group - Monad Comprehensions/backtracking" do
       suite "parser" do
         let
